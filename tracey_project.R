@@ -41,3 +41,13 @@ anova(lm2)
 lm3 <- lmer(plant_height~weekf*(nitrogen_kg_ha + treatment + map_kg_ha)+
               (1|transect) + (1|plot), cotton2)
 anova(lm3)
+
+emmeans(lm3, pairwise~nitrogen_kg_ha|weekf)
+
+
+resultsplot <- summary(emmeans(lm3, ~treatment*weekf))
+
+ggplot(resultsplot, aes(weekf, emmean, colour = treatment)) + 
+  geom_point(position = position_dodge(width=.2))+
+  geom_errorbar(aes(ymin=emmean-SE, ymax= emmean+SE), width = .2, position = position_dodge(width = .2))+
+  geom_smooth()
